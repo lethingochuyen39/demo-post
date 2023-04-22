@@ -1,6 +1,6 @@
 paging:
-    pageNo: 0
-    pageSize: 10
+  pageNo: 0
+  pageSize: 10
 spring:
-    jpa:
-        show-sql: true
+  jpa:
+    show-sql: false
