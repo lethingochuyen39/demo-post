@@ -43,13 +43,17 @@ public class BlogController {
 	public ResponseEntity<?> updateBlog(@PathVariable("blogId") Integer blogId,
 			@RequestBody Blog blog) {
 		return ResponseEntity.ok(blogServiceImpl.updateBlog(blog, blogId));
-
 	}
 
 	@DeleteMapping("/blogs/{blogId}")
 	public ResponseEntity<?> deleteBlogById(@PathVariable("blogId") Integer blogId) {
 		blogServiceImpl.deleteBlogById(blogId);
 		return ResponseEntity.ok("delete blog successfully");
+	}
+
+	@GetMapping(path = "/blogs/search{url}")
+	public ResponseEntity<List<Blog>> getBlogsByUrl(@PathVariable("url") String url) {
+		return ResponseEntity.ok(blogServiceImpl.findByUrl(url));
 	}
 
 }
