@@ -64,20 +64,17 @@ public class PostServiceImpl implements PostService {
 			Post _post = dataPost.get();
 			_post.setTitle(post.getTitle()).setContent(post.getContent());
 			return postRepository.save(_post);
-
 		} else {
 			throw new Exception("PostId not found");
 		}
 	}
 
-	@Transactional
 	@Override
 	public boolean deleteById(int postId) {
 		postRepository.deleteById(postId);
 		return true;
 	}
 
-	@Transactional
 	@Override
 	public void deleteAllPostsByBlogId(int blogId) throws Exception {
 		if (!blogRepository.existsById(blogId)) {
