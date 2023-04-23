@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.aptech.blog.model.Blog;
 
-public interface BlogService<T> {
+public interface BlogService {
 
 	public List<Blog> findAllBlogs();
 

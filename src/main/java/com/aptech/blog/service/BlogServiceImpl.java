@@ -15,7 +15,7 @@ import com.aptech.blog.repository.PostRepository;
 import jakarta.transaction.Transactional;
 
 @Service
-public class BlogServiceImpl implements BlogService<Blog> {
+public class BlogServiceImpl implements BlogService {
 
 	@Autowired
 	private BlogRepository blogRepository;
