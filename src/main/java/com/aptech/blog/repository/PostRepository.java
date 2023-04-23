@@ -11,8 +11,10 @@ public interface PostRepository extends CrudRepository<Post, Integer> {
 	List<Post> findByBlogBlogId(int blogId);
 
 	// xóa các post theo BlogId
-	void deleteByBlogBlogId(int blogId);
+	// void deleteByBlogBlogId(int blogId);
 
 	// tìm ds post theo title
 	List<Post> findByTitleContaining(String title);
+
+	void deleteAllPostsByBlogBlogId(int blogId);
 }

@@ -26,12 +26,22 @@ public class PostController {
 	@GetMapping(path = "blogs/{blogId}/posts")
 	public ResponseEntity<List<Post>> getAllPostByBlogId(
 			@PathVariable(value = "blogId") int blogId) {
-		return ResponseEntity.ok(postServiceImpl.findBlogsByBlogId(blogId));
+		List<Post> posts = postServiceImpl.findAllByBlogId(blogId);
+		if (posts.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(posts);
+
 	}
 
 	@GetMapping(path = "posts/{postId}")
-	public ResponseEntity<?> getPostById(@PathVariable(value = "postId") int postId) {
-		return ResponseEntity.ok(postServiceImpl.findPostById(postId));
+	public ResponseEntity<?> getPostById(@PathVariable(value = "postId") int postId) throws Exception {
+		try {
+			return ResponseEntity.ok(postServiceImpl.findById(postId));
+		} catch (Exception e) {
+			return ResponseEntity.notFound().build();
+		}
+
 	}
 
 	@PostMapping(path = "blogs/{blogId}/post")
@@ -57,7 +67,7 @@ public class PostController {
 
 	@DeleteMapping("/posts/{postId}")
 	public ResponseEntity<?> deletePost(@PathVariable("postId") int postId) {
-		postServiceImpl.deletePostByPostId(postId);
+		postServiceImpl.deleteById(postId);
 		return ResponseEntity.ok("delete post successfully");
 	}
 
@@ -65,7 +75,7 @@ public class PostController {
 	public ResponseEntity<?> deleteAllPostOfBlogs(
 			@PathVariable(value = "blogId") int blogId) throws Exception {
 		try {
-			postServiceImpl.deleteByBlogId(blogId);
+			postServiceImpl.deleteAllPostsByBlogId(blogId);
 			return new ResponseEntity<>("delete all post of blogs successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());

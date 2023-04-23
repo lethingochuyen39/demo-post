@@ -1,11 +1,13 @@
 package com.aptech.blog.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aptech.blog.model.Blog;
 import com.aptech.blog.model.Post;
 import com.aptech.blog.repository.BlogRepository;
 import com.aptech.blog.repository.PostRepository;
@@ -22,29 +24,36 @@ public class PostServiceImpl implements PostService {
 	private BlogRepository blogRepository;
 
 	@Override
-	public List<Post> findBlogsByBlogId(int blogId) {
+	public List<Post> findAllByBlogId(int blogId) {
 		return postRepository.findByBlogBlogId(blogId);
 	}
 
 	@Override
-	public Optional<Post> findPostById(int postId) {
-		Optional<Post> postOptional = postRepository.findById(postId);
-		return postOptional;
+	public Post findById(int postId) throws Exception {
+		Optional<Post> post = postRepository.findById(postId);
+		if (post.isPresent()) {
+			return post.get();
+		} else {
+			throw new Exception("Not found");
+		}
 	}
 
 	@Override
 	public Post addPost(Post post, int blogId) throws Exception {
 
-		boolean exits = postRepository.existsById(post.getPostId());
-		if (exits) {
-			throw new Exception("exits employee");
+		boolean exists = postRepository.existsById(post.getPostId());
+		if (exists) {
+			throw new Exception("Post with id " + post.getPostId() + " already exists");
 		}
+		// nếu post chưa tồn tại ,tìm kiếm blog tương ứng với blogId
 		Post _post = blogRepository.findById(blogId).map(blog -> {
+			// nếu có blog set blog cho post
 			post.setBlog(blog);
+			// lưu post mới vào db
 			return postRepository.save(post);
 		}).orElseThrow(() -> new Exception("Not found blog with id = " + blogId));
+		return _post;
 
-		return post;
 	}
 
 	@Override
@@ -53,8 +62,7 @@ public class PostServiceImpl implements PostService {
 
 		if (dataPost.isPresent()) {
 			Post _post = dataPost.get();
-			_post.setTitle(post.getTitle()).setContent(post.getContent())
-					.setBlog(post.getBlog());
+			_post.setTitle(post.getTitle()).setContent(post.getContent());
 			return postRepository.save(_post);
 
 		} else {
@@ -62,18 +70,20 @@ public class PostServiceImpl implements PostService {
 		}
 	}
 
+	@Transactional
 	@Override
-	public void deletePostByPostId(int postId) {
+	public boolean deleteById(int postId) {
 		postRepository.deleteById(postId);
+		return true;
 	}
 
 	@Transactional
 	@Override
-	public void deleteByBlogId(int blogId) throws Exception {
+	public void deleteAllPostsByBlogId(int blogId) throws Exception {
 		if (!blogRepository.existsById(blogId)) {
 			throw new Exception("Not found Department with id = " + blogId);
 		}
-		postRepository.deleteByBlogBlogId(blogId);
+		postRepository.deleteAllPostsByBlogBlogId(blogId);
 	}
 
 	@Override
