@@ -17,4 +17,6 @@ public interface BlogService<T> {
 
 	public void deleteBlogById(int id);
 
+	public List<Blog> findByUrl(String url);
+
 }

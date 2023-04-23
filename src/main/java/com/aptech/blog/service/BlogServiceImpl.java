@@ -117,4 +117,9 @@ public class BlogServiceImpl implements BlogService<Blog> {
 	// return blogRepository.save(blog);
 	// }
 
+	@Override
+	public List<Blog> findByUrl(String url) {
+		return blogRepository.findByUrlContaining(url);
+	}
+
 }
